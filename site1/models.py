@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
 class Data(models.Model):
+
+
 	units = ArrayField(
 		ArrayField(models.FloatField())
 		)
@@ -14,4 +16,5 @@ class Data(models.Model):
 	mags = ArrayField(
 		ArrayField(models.FloatField())
 		)
+
 

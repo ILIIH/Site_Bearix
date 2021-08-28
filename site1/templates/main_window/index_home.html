@@ -122,7 +122,11 @@
       <a class="detailes"  >Подробнее</a>
         </div>
       <div class="col-sm-0 col-lg-6" >
+        <picture>
+          <source type="image/webp" srcset="{%static 'img\engine.webp' %}"> 
+          <source type="image/avif" srcset="{%static 'img\engine.avif' %}"> 
         <img class="imgEngine" src="{%static 'img\engine.jpg' %}" width="60%" height="90%"></img>
+      </picture>
       </div>
     </div>
   </div>
@@ -164,7 +168,7 @@
            <a href="#"><img src="{%static 'img\9.png' %}" class="my_area" alt="6"> </a>
 </div>
 </div>
-<hr  style="color: grey; margin-top: 0px; background-color: grey; margin-bottom: 0%;" width="100%" size="5px">
+
 <h6  style="text-align: center; padding-top: 60px; margin-bottom: 30px; font-size: 24pt; ">Свяжитесь с нами </h6>
 <hr  style="color: #ff8b38; margin: auto; background-color: #ff8b38; margin-bottom: 40px;" width="15%" size="5px">
 
@@ -175,7 +179,7 @@
    
     <div class="col-sm col-lg-6" >
       <div class="row" >  <input name= "Name" class="textarea" placeholder="Имя " type="text" id='Email' > </div>
-      <div class="row" > <input name= "FirstName" class="textarea" placeholder="Фамилия " type="text" id='Email'  > </div>
+      <div class="row" > <input name= "LastName" class="textarea" placeholder="Фамилия " type="text" id='Email'  > </div>
       <div class="row" > <input name= "Email" class="textarea" placeholder="Email " type="Email" id='Email' > </div>
     </div>
     <div class="col-sm col-lg-6" >

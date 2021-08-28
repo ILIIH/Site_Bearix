@@ -1,3 +1,12 @@
+
+var magazine = new Array();
+magazine.push({"numb":228,"col":78,"name":"Jolufulu"})
+
+
+console.log(magazine[0].numb)
+
+
+
 table= document.getElementById('tableBtn');
 table.onclick = function(event) {
   let target = event.target; 

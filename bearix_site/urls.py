@@ -8,4 +8,5 @@ urlpatterns = [
     url('upload/', views.get_uppload_csv, name='upload'),
     url('example/', views.get_example, name='example'),
     path('', views.get_home),
+   
 ]

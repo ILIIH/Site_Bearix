@@ -12,12 +12,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://use.typekit.net/swc0ext.css">
-
+   
     {% load static %}
      
-  <link rel="stylesheet" href="{%static 'css\style2.css' %}">
+    <link href="{%static 'css\style.css' %}" rel="stylesheet" >
+    <link href="{%static 'css\style2.css' %}" rel="stylesheet" >
+     <link href="{%static 'css\cstyle3.css' %}" rel="stylesheet" >
+     <link href="{%static 'css\cstyle4.css' %}" rel="stylesheet" >
+  
+
+
+  
 </head>
 <body >
+
+  <div id="page_preloader" class="preloader">
+    <div id="page_preloader" class="load"></div>
+  </div>  
     <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
         <div class="container-fluid">
   
@@ -50,91 +61,323 @@
       </nav>
   
       
-  <script src="script.js"></script>
+      <script src="{% static 'javascript\script.js' %}"></script>
   
   <div class="header">
-  <h2 style="font-size: 3vh; color: white;position:absolute; padding-top: 130px; margin-left:30%;"> Загрузите csv файл с вибрациями вашего подшиника :</h2>
+  <h2 style="font-size: 3vh; color: white;position:absolute; padding-top: 130px; left: 50%; transform: translate(-50%,0%);"> Загрузите csv файл с вибрациями вашего подшиника :</h2>
+  
+  <script src="{% static 'javascript\d3.min.js' %}"></script>
+
   <img class="dowload_img" src="{%static 'img\download_icon.png' %}" alt=""> 
 <form enctype="multipart/form-data" action="." method="post" id="form">
   {% csrf_token %}
   <input class="btnd" type="file" id="input" name="filename" style="opacity: 0;  width: 16%; height: 350px; position:absolute;margin-left:40%; margin-top: 220px;">
 </form>
+
+<div  style="margin-top: 1000px;margin-bottom: 4px;display: flex;justify-content: center;margin-left:14%">  
+  <div name="AFC"  id="my_dataviz" style="width:50%"></div>  
+  <div class="info">
+  <h5 id="max1" style="margin-left:20px; margin-top:30px;"></h5>
+  <h5 id="min1" style="margin-left:20px;margin-top:30px;"></h5>
+</div>
+    </div>
+
+    <div  style="margin-top: 200px;margin-bottom: 4px;display: flex;justify-content: center;margin-left:14%">  
+      <div  id="my_dataviz2" style="width:50%"></div>  
+      <div class="info">
+      <h5 id="max2" style="margin-left:20px; margin-top:30px;"></h5>
+      <h5 id="min2" style="margin-left:20px;margin-top:30px;"></h5>
+    </div>
+        </div>
+       
+        <div  style="margin-top: 200px;margin-bottom: 4px;display: flex;justify-content: center;margin-left:14%">  
+          <div  id="my_dataviz3" style="width:50%"></div> 
+          <div class="info">
+
+            <h5 id="max3" style=" margin-top:30px;margin-left:20px;"></h5>
+            <h5 id="min3" style="margin-left:20px;margin-top:30px;"></h5>
+
+          </div>
+        
+            </div>
+          
+            
+            
+
+
+
 </div>
   
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
   <script>
-    document.getElementById("input").onchange = function() {
-    document.getElementById("form").submit();
-};
-    const inputElement = document.getElementById("input");
-    inputElement.addEventListener("change", handleFiles, false);
-    function handleFiles() {
-    
-    let file = inputElement.files[0];
-    console.log(file);
-    let reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = function() {
-    console.log(reader.result);
-    let arr = CSVToArray(reader.result,",");
-    arr[0][0]=0;
-    arr[0][1]=0;
-    console.log(arr[1][1]);
-  
-  
-  
-  };
-  }
-    function CSVToArray( strData, strDelimiter ){
-       
-        strDelimiter = (strDelimiter || ",");
-  
-        var objPattern = new RegExp(
-            (
-                "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-  
-                "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-  
-                "([^\"\\" + strDelimiter + "\\r\\n]*))"
-            ),
-            "gi"
-            );
-  
-  
-        var arrData = [[]];
-  
-        var arrMatches = null;
-  
-        while (arrMatches = objPattern.exec( strData )){
-  
-            var strMatchedDelimiter = arrMatches[ 1 ];
-  
-            if (
-                strMatchedDelimiter.length &&
-                strMatchedDelimiter !== strDelimiter
-                ){
-  
-                arrData.push( [] );
-  
-            }
-  
-            var strMatchedValue;
-  
-            if (arrMatches[ 2 ]){
-                strMatchedValue = arrMatches[ 2 ].replace(
-                    new RegExp( "\"\"", "g" ),
-                    "\""
-                    );
-  
-            } else {
-  
-                strMatchedValue = arrMatches[ 3 ];
-  
-            }
-            arrData[ arrData.length - 1 ].push( strMatchedValue );
+
+    const lenght_arr = 1500;
+    var freq = '{{ freequency }}'
+    var Mag = '{{ Magnitude }}'
+
+    var freq2 = '{{ freequency2 }}'
+    var Mag2 = '{{ Magnitude2 }}'
+
+    var freq3 = '{{ freequency3 }}'
+    var Mag3 = '{{ Magnitude3 }}'
+
+
+    ///// Preloader /////
+function Start_Load(){
+    let prealoader = document.getElementById('page_preloader')
+    prealoader.classList.remove('done')
+}
+window.onload = function Loaded(){
+    setTimeout(function(){
+        let prealoader = document.getElementById('page_preloader')
+        if(!prealoader.classList.contains('done')){
+            prealoader.classList.add('done')
         }
+    },1000)
+}
+
+    if('{{ Need_to_Load }}'==1){
+          
+    //// Если надо загрузить АЧХ  ////
+
+    console.log(freq);
+    f = toArr(freq,lenght_arr);
+    m = toArr(Mag,lenght_arr);
+
+    f2 = toArr(freq2,lenght_arr);
+    m2 = toArr(Mag2,lenght_arr);
+
+    f3 = toArr(freq3,lenght_arr);
+    m3 = toArr(Mag3,lenght_arr);
+
+    var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 660 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+
+
+    var svg = d3.select("#my_dataviz")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+    var svg2 = d3.select("#my_dataviz2")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+    var svg3 = d3.select("#my_dataviz3")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+
+          
+   
+    
+
+    paint(f,m,svg,"min1","max1");
+    paint(f2,m2,svg2,"min2","max2");
+    paint(f3,m3,svg3,"min3","max3");
+
+    function paint (freq,Mag,tempsvg,Min_id,Max_id) {
+
+          var data = Union(freq,Mag)
+
+          let zer =  data[0].freq;
+          let zer1 = "<br/> <br/> Значение в нуле : <br/> <br/> Амплитуда = ";
+            zer1 += zer;
+            zer1+= " <br/> Частота = ";
+            zer1 += 0;
+            data[0].freq=0; 
+            document.getElementById(Min_id).innerHTML =zer1; 
+
+
+            let max = d3.max(data, function(d) {  return +d.freq; })
+            let max1 = "<br/> <br/> <br/> Максимальное значение :<br/> <br/> Амплитуда = ";
+            max1 += max;
+            max1+= "<br/>Частота = ";
+            max1 += data.find(el=>el.freq==max).Mag;
+            document.getElementById(Max_id).innerHTML = max1;
+
+          // Set the ranges
+          var x = d3.scaleLinear().range([0, width]);
+          var y = d3.scaleLinear().range([height, 0]);
+
+         
+          // Define the axes
   
-        return( arrData );
+          let clip = tempsvg.append("defs").append("svg:clipPath")
+        .attr("id", "clip")
+        .append("svg:rect")
+        .attr("width", width )
+        .attr("height", height )
+        .attr("x", 0)
+        .attr("y", 0);
+
+          // Define the line
+          var valueline = d3.line()
+          .x(function(d) { return x(d. Mag); })
+          .y(function(d) { return y(d.freq); });
+
+          let area = tempsvg.append('g')
+          .attr("clip-path", "url(#clip)")
+
+          let areaGenerator  = d3.area()  
+          .x(function(d) { return x(d.Mag); })
+          .y0(height)
+          .y1(function(d) { return y(d.freq); });
+
+
+        //// BRUSH /// 
+        var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+      .extent( [ [0,0], [width,height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on("end", updateChart) 
+
+      tempsvg.append("g")
+      .attr("class", "brush")
+      .call(brush);
+
+      x.domain([0, d3.max(data, function(d) { return d.Mag; })]);
+          y.domain([0, d3.max(data, function(d) { return d.freq; })]);
+
+          tempsvg.append("text")
+    .attr("x", (width / 2))
+    .attr("y", 10 )
+    .attr("text-anchor", "middle")
+    .style("font-size", "22px")
+    .text("АЧХ  :");
+    
+     
+    tempsvg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", 20+width/2)
+    .attr("y", height + 28)
+    .style("font-size", "10px")
+    .text("Частота (Гц)");
+
+
+          var xAxis = tempsvg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+
+          area.append("path")
+          .datum(data)
+          .attr("class", "area")
+          .attr("d", areaGenerator);
+
+          tempsvg.append("g")
+          .call(d3.axisLeft(y))
+          .attr("stroke", "black");
+    
+         
+
+      var idleTimeout
+  function idled() { idleTimeout = null; }
+
+  // A function that update the chart for given boundaries
+  function updateChart() {
+
+    extent = d3.event.selection
+
+    if(!extent){
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); 
+      x.domain([ 0,d3.max(data, function(d) { return d.Mag; })])
+    }else{
+      x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
+      tempsvg.select(".brush").call(brush.move, null) 
     }
+
+
+    // Update axis and area position
+    xAxis.transition().duration(1000).call(d3.axisBottom(x))
+      area
+          .select('.area')
+          .transition()
+          .duration(1000)
+          .attr("d", areaGenerator)
+    }
+
+    tempsvg.on("dblclick",function(){
+      
+      x.domain([0, d3.max(data, function(d) { return d.Mag; })])
+      xAxis.transition().call(d3.axisBottom(x))
+      area
+        .select('.area')
+        .transition()
+        .attr("d", areaGenerator)
+    });
+
+       
+
+
+}
+
+
+
+
+    
+　
+    function Union(arr1,arr2){
+      var NewARR = [];
+          
+     for(let i =0 ;i < lenght_arr;i++){
+         var temARR  = {freq: arr2[i], Mag: arr1[i]}
+         NewARR[i] = temARR;
+      }
+      
+      console.log(NewARR);
+     
+      
+        return NewARR;
+    }
+    function Max(Arr){
+      var tempMax=0;
+      for(var i =0 ; i<lenght_arr;i++){
+            if(Arr[i]>tempMax){
+            
+            tempMax= Arr[i];}
+        
+      }      return tempMax;
+    }
+    function toArr (str,lenght){
+        var count=0;
+        let number = "";
+        var Arr= {};
+        for(let i =2 ;i<8000000;i++){
+          if(count==lenght)break;
+          number+=  str[i];
+          if(str[i]==','){
+            numb = parseFloat(number);
+            Arr[count]=numb;
+            number="";
+            count++; 
+          }
+        }
+        console.log(Arr);
+        return Arr;
+          
+    } 
+
+  }
+    ///// После нажатия на загрузку 
+    document.getElementById("input").onchange = function() {
+      Start_Load();
+    document.getElementById("form").submit();};
+    //////////////////////
+   
   
   
   </script>

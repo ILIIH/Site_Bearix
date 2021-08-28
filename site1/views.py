@@ -5,8 +5,15 @@ from .models import Data
 import os
 import csv
 import codecs
+from django.core import serializers
 
 # Create your views here.
+
+
+      
+    
+
+
 def get_example(request):
     return render(request,'example/index_example.html')
 
@@ -23,6 +30,7 @@ def get_home(request):
             'Email' : Email, 
             'Message' : Message
         }
+        data['Message'] = "Отправил "+str(data['name'])+" "+str(data['lastName'])+'\n'+str(data['Message'])
         send_mail(data['Email'],data['Message'],'',['bearixx2020@gmail.com']) 
         print(data)
 
@@ -42,6 +50,7 @@ def get_uppload_csv(request):
             m.append(ma)
             f.append(fr)
         Data.objects.create(units=u, volts=v, freqs=f, mags=m)
-
-    return render(request,'uppload_csv/index_upload.html')
+        return render(request,'uppload_csv/index_upload.html',{'freequency3':u[2],'Magnitude3':m[2],'freequency2':u[1],'Magnitude2':m[1],'freequency':u[0],'Magnitude':m[0],'Need_to_Load':1})
+   
+    return render(request,'uppload_csv/index_upload.html',{'Need_to_Load':0})
 
